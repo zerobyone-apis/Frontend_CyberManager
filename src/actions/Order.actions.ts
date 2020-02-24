@@ -1,7 +1,15 @@
-import ResultObject from '../../../backend/src/models/ResultObject';
 import IntegrationBackend from '../utils/IntegrationBackend';
-import Datetime from '../utils/DateTime';
+// import Datetime from '../utils/DateTime';
+import moment from 'moment';
 import { IOrder } from '@/types/Order.type';
+import ResultObject from '../utils/ResultObject';
+import {
+  ORDER_ROUTE,
+  PUT_ENDPOIT,
+  GET_ENDPOIT,
+  POST_ENDPOIT,
+  DELETE_ENDPOIT
+} from '../types/Routes.type';
 import {
   ORDER_CONFIRM,
   ORDER_DELIVERED,
@@ -17,15 +25,14 @@ export default class OrderActions {
     let orders: IOrder[] = [];
     try {
       let responseOrders: IOrder[] = await this.backend.send(
-        'get',
+        GET_ENDPOIT,
         undefined,
-        '/pedido'
+        ORDER_ROUTE
       );
       responseOrders.forEach((order: IOrder) => {
-        order.admissionDateFront = new Datetime().normalize(
-          (order.admissionDate || '').toString()
+        order.admissionDateFront = moment(order.admissionDate).format(
+          'DD/MM/YYYY hh:mm:ss'
         );
-
         orders.push(order);
       });
       return orders;
@@ -38,15 +45,13 @@ export default class OrderActions {
   public async add(order: IOrder) {
     try {
       let data: IOrder = {
-        admissionDate: new Datetime().convertDatetime(
-          order.admissionDateFront || ''
+        admissionDate: moment(order.admissionDateFront).format(
+          'YYYY-MM-DD hh:mm:ss'
         ),
         clientName: order.clientName,
         clientPhone: order.clientPhone,
-
         deliverDate: undefined,
         repairDate: undefined,
-
         article: order.article,
         model: order.model,
         brand: order.brand,
@@ -56,9 +61,9 @@ export default class OrderActions {
         status: ORDER_RECIVED.text
       };
       const response: { id: number }[] = await this.backend.send(
-        'post',
+        POST_ENDPOIT,
         data,
-        '/pedido'
+        ORDER_ROUTE
       );
       let newOrder: IOrder = {
         id: response[0].id,
@@ -98,13 +103,15 @@ export default class OrderActions {
         observations: order.observations,
         isCanceled: false,
         repairDate:
-          order.repairDate == '' ? new Datetime().getDate() : order.repairDate,
+          order.repairDate == ''
+            ? moment().format('YYYY-MM-DD hh:mm:ss')
+            : order.repairDate,
         status: order.status != '' ? order.status : ORDER_RECIVED.text
       };
       const response: any = await this.backend.send(
-        'put',
+        PUT_ENDPOIT,
         data,
-        `/pedido/${order.id}`
+        `${ORDER_ROUTE}/${order.id}`
       );
       return order;
     } catch (error) {
@@ -117,14 +124,16 @@ export default class OrderActions {
     if (confirm('Seguro que desea eliminar la orden seleccionada?')) {
       try {
         const response: any = await this.backend.send(
-          'delete',
+          DELETE_ENDPOIT,
           undefined,
-          `/pedido/${pedido.id}`
+          `${ORDER_ROUTE}/${pedido.id}`
         );
       } catch (error) {
         console.error('Error borrando pedidio => ', error);
       }
+      return true;
     }
+    return false;
   }
 
   getMaxIdOfOrders(orders: IOrder[]) {
@@ -139,7 +148,7 @@ export default class OrderActions {
 
   public orderBase: IOrder = {
     id: 1,
-    admissionDate: new Datetime().now(),
+    admissionDate: moment().format('YYYY-MM-DD hh:mm:ss'),
     clientName: '',
     clientPhone: '',
     article: '',
