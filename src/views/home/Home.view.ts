@@ -5,7 +5,7 @@ import { IUserStore } from '../../types/UserStore.type';
 import { USER_ADMIN, USER_EMPLOYEE } from '../../types/UsersSystem.type';
 import Datetime from '../../utils/DateTime';
 
-import ResultObject from '../../../../backend/src/models/ResultObject';
+import ResultObject from '../../utils/ResultObject';
 
 export default class HomeView extends vue {
   private backend: IntegrationBackend = new IntegrationBackend();

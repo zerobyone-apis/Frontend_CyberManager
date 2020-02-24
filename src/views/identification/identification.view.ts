@@ -15,7 +15,7 @@ import { IRepair } from '../../types/Repair.type';
 import { IOrder } from '../../types/Order.type';
 
 import { Watch } from 'vue-property-decorator';
-import ResultObject from '../../../../backend/src/models/ResultObject';
+import ResultObject from '../../utils/ResultObject';
 
 import htmlToImage from 'html-to-image';
 
@@ -87,6 +87,7 @@ export default class IndentificationView extends vue {
     repairDate: '',
     reparation: '',
     price: 0,
+    replacementPrice: 0,
     status: ''
   };
   private enterprise: IEnterprise = {
@@ -205,10 +206,30 @@ export default class IndentificationView extends vue {
    * @Watch('wizard')
    */
   public miniToolbar = [
-    { text: 'Identificacion', icon: 'people', disabled: false, visible: true },
-    { text: 'Reparacion', icon: 'settings', disabled: true, visible: true },
-    { text: 'Entrada', icon: 'input', disabled: true, visible: true },
-    { text: 'Salida', icon: 'send', disabled: true, visible: true },
+    {
+      text: 'Identificacion',
+      icon: 'people',
+      disabled: false,
+      visible: true
+    },
+    {
+      text: 'Reparacion',
+      icon: 'settings',
+      disabled: true,
+      visible: true
+    },
+    {
+      text: 'Entrada',
+      icon: 'input',
+      disabled: true,
+      visible: true
+    },
+    {
+      text: 'Salida',
+      icon: 'send',
+      disabled: true,
+      visible: true
+    },
     {
       text: 'Empresa',
       icon: 'home',
@@ -410,6 +431,7 @@ export default class IndentificationView extends vue {
       warranty: order.warranty,
       technical: this.userInfo.username,
       status: this.newOrder.status || ORDER_RECIVED.text,
+      replacementPrice: order.replacementPrice || 0,
       price: order.price || 0
     };
   }
