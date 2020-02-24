@@ -1,0 +1,81 @@
+.xs-format {
+  width: 100% !important;
+  margin-left: 0 !important;
+}
+
+.sm-format,
+.md-format,
+.lg-format,
+.xl-format {
+  width: 60%;
+  margin-left: 20%;
+}
+
+#home-page {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  background-image: radial-gradient(circle, rgba(58,214,207,1) 0%, rgba(36,156,157,1) 49%, rgba(0,93,93,1) 100%);
+
+  .img-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    opacity: 0.5;
+    
+  }
+
+  .stepper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+   
+    background: linear-gradient(
+      90deg,
+      rgb(244, 252, 255) 0%,
+      rgb(0, 137, 190) 96%
+    );
+    background-size: 140%;
+
+    .v-stepper__items {
+      height: 100% !important;
+      .v-stepper__content {
+        height: 100% !important;
+        .v-stepper__wrapper {
+          height: 100% !important;
+        }
+      }
+    }
+  }
+
+  .box-access {
+    position: relative;
+    width: 400px;
+    top: 100px;
+    padding: 30px;
+    padding-top: 30px;
+    margin: auto;
+    border-radius: 4px;
+    background-color: white;
+
+    .title {
+      margin: 20px;
+    }
+
+    .footer {
+      position: relative;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .signup-button {
+      position: relative;
+      width: 100%;
+      height: 60px;
+      margin-top: 40px;
+    }
+  }
+}

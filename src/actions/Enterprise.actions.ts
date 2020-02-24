@@ -1,8 +1,13 @@
 import { IEnterprise } from '../types/Enterprise.type';
 import IntegrationBackend from '../utils/IntegrationBackend';
-import Datetime from '../utils/DateTime';
+import moment from 'moment';
 import { IUserStore } from '@/types/UserStore.type';
-import ResultObject from '../../../backend/src/models/ResultObject';
+import ResultObject from '../utils/ResultObject';
+import {
+  ENTERPRISE_ROUTE,
+  PUT_ENDPOIT,
+  GET_ENDPOIT
+} from '../types/Routes.type';
 
 export default class EnterpriseActions {
   private backend: IntegrationBackend = new IntegrationBackend();
@@ -13,20 +18,19 @@ export default class EnterpriseActions {
         enterpriseName: enterprise.enterpriseName,
         location: enterprise.location,
         cellphone: enterprise.cellphone,
-        email: enterprise.email,
         enterpriseRules: enterprise.enterpriseRules,
         urlLogo: enterprise.urlLogo || '',
         phone: enterprise.phone,
         firstMessage: enterprise.firstMessage,
         secondMessage: enterprise.secondMessage,
-        lastUpdate:
-          new Datetime().convert(new Datetime().getDate()) + ' 00:00:00',
+        lastUpdate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        email: enterprise.email || '',
         id: enterprise.id
       };
       const response: any = await this.backend.send(
-        'put',
+        PUT_ENDPOIT,
         data,
-        `/empresa/${enterprise.id}`
+        `${ENTERPRISE_ROUTE}/${enterprise.id}`
       );
       return new ResultObject(200, 'success');
     } catch (error) {
@@ -36,20 +40,19 @@ export default class EnterpriseActions {
   }
 
   public async get(userInfo: IUserStore) {
-    console.log(userInfo);
     try {
       const response: IEnterprise = await this.backend.send(
-        'get',
+        GET_ENDPOIT,
         undefined,
-        `/empresa/${userInfo.id}`
+        `${ENTERPRISE_ROUTE}/${userInfo.id}`
       );
       return response;
     } catch (error) {
-      return null;
       console.error(
         'Algo sucedio obteniendo los datos de la empresa observe -> ',
         error
       );
+      return null;
     }
   }
 }

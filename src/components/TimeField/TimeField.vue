@@ -17,6 +17,7 @@
             :label="label"
             readonly
             v-on="on"
+            :outlined="outlined"
           ></v-text-field>
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
@@ -57,29 +58,32 @@
       <template v-slot:activator="{ on }">
         <div class="field-date__box">
           <v-text-field
+            class="field"
             v-model="simpleDate"
             :error="error"
             :error-messages="errorMessage"
             :label="label"
             readonly
             v-on="on"
-          ></v-text-field>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                @click="setTodayDate()"
-                text
-                color="green"
-                v-on="on"
-                class="btn-date"
-                fab
-                small
-              >
-                <v-icon>calendar_today</v-icon>
-              </v-btn>
+            :outlined="outlined"
+          >
+            <template v-slot:append>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click="setTodayDate()"
+                    text
+                    color="green"
+                    v-on="on"
+                    class="insert_date-btn"
+                  >
+                    <v-icon>calendar_today</v-icon>
+                  </v-btn>
+                </template>
+                <span>pegar fecha actual</span>
+              </v-tooltip>
             </template>
-            <span>pegar fecha actual</span>
-          </v-tooltip>
+          </v-text-field>
         </div>
       </template>
       <v-date-picker v-model="time" scrollable :min="min" :locale="lang">
@@ -96,7 +100,6 @@
 <script lang="ts">
 import { Prop, Watch, Component } from 'vue-property-decorator';
 import TimeFieldCode from './TimeFieldCode';
-import Datetime from '../../utils/DateTime';
 import './TimeFieldStyle.scss';
 
 @Component({})
@@ -107,6 +110,7 @@ export default class TimeField extends TimeFieldCode {
   @Prop({ default: '' }) label!: string;
   @Prop({ default: '' }) error!: string;
   @Prop({ default: '' }) min!: string;
+  @Prop({ default: false }) outlined!: boolean;
   @Prop({ default: '' }) errorMessage!: string;
 
   @Watch('time')

@@ -1,8 +1,6 @@
 import { IRepair } from '../types/Repair.type';
-import { IOrder } from '../types/Order.type';
 import IntegrationBackend from '../utils/IntegrationBackend';
-import Datetime from '../utils/DateTime';
-import ResultObject from '../../../backend/src/models/ResultObject';
+import { REPARIR_ROUTE, PUT_ENDPOIT } from '../types/Routes.type'; 
 
 export default class ReparirActions {
   private backend: IntegrationBackend = new IntegrationBackend();
@@ -12,7 +10,7 @@ export default class ReparirActions {
       console.log(repair.deliverDate, repair.repairDate);
 
       // formatting
-      //..........
+      // ..........
       let deliverDateFormat: string | null = repair.deliverDate || null;
       let repairDateFormat: string | null = repair.repairDate || null;
 
@@ -47,12 +45,13 @@ export default class ReparirActions {
         reparation: repair.reparation,
         warranty: repair.warranty,
         price: repair.price,
+        replacementPrice: repair.replacementPrice,
         status: repair.status
       };
       const response: any = await this.backend.send(
-        'put',
+        PUT_ENDPOIT,
         data,
-        `/pedido/repair/${repair.id}`
+        `${REPARIR_ROUTE}/${repair.id}`
       );
       return repair;
     } catch (error) {
