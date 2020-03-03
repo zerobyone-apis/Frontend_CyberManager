@@ -101,7 +101,7 @@ export default class Styles {
     doc.setLineWidth(1);
     doc.setDrawColor(160, 200, 160);
     doc.line(70, 75, 70, 310); // vertical line
-    doc.line(70, 370, 70, 600); // vertical line
+    doc.line(70, 360, 70, 585); // vertical line
   }
 
   drawVerticalLinesItemsInput(doc: jsPDF) {
@@ -144,7 +144,7 @@ export default class Styles {
     doc.line(158, 429, 158, 441);
     doc.line(280, 429, 280, 441);
     doc.line(360, 429, 360, 441);
-    34; /*   DRAW L29ES34ORDER SECOND MENU            **/
+    /*   DRAW LINES SECOND MENU            **/
     doc.line(80, 429, 80, 572);
     doc.line(360, 429, 360, 572);
   }

@@ -23,6 +23,7 @@ export default class TimeFieldCode extends Vue {
       .toLocaleTimeString()
       .split(' ')[0]
       .split(':');
+    console.log(hParts);
     if (hParts[0].length == 1) {
       hParts[0] = '0' + hParts[0];
     }
@@ -38,6 +39,8 @@ export default class TimeFieldCode extends Vue {
         .split('-');
       return `${d[2]}/${d[1]}/${d[0]}`;
     } else {
+      /*let d = new Date().toLocaleDateString().split('/');
+      return `${d[1]}/${d[0]}/${d[2]}`; */
       return moment().format('DD/MM/YYYY');
     }
   }

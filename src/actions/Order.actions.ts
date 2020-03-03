@@ -27,13 +27,13 @@ export default class OrderActions {
       let responseOrders: IOrder[] = await this.backend.send(
         GET_ENDPOIT,
         undefined,
-        ORDER_ROUTE
+        ORDER_ROUTE 
       );
       responseOrders.forEach((order: IOrder) => {
         order.admissionDateFront = moment(order.admissionDate).format(
           'DD/MM/YYYY hh:mm:ss'
         );
-        orders.push(order);
+        orders.unshift(order);
       });
       return orders;
     } catch (error) {
