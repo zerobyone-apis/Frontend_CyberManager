@@ -391,8 +391,8 @@ export default class IndentificationView extends vue {
     Object.assign(this.newOrder, this.cleanFields);
     Object.assign(this.newOrder, {
       id: order.id,
-      admissionDate: order.admissiondate,
-      admissionDateFront: order.admissiondateFront,
+      admissiondate: order.admissiondate,
+      admissiondateFront: order.admissiondateFront,
       deliveryDate: order.deliverydate,
       clientname: order.clientname,
       clientphone: order.clientphone,
