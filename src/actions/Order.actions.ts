@@ -30,7 +30,7 @@ export default class OrderActions {
         ORDER_ROUTE
       );
       responseOrders.forEach((order: IOrder) => {
-        order.admissiondateFront = moment(order.admissiondate).format(
+        order.admissionDateFront = moment(order.admissiondate).format(
           'DD/MM/YYYY hh:mm:ss'
         );
         orders.unshift(order);
@@ -45,7 +45,7 @@ export default class OrderActions {
   public async add(order: IOrder) {
     try {
       let data: IOrder = {
-        admissiondate: moment(order.admissiondateFront).format(
+        admissiondate: moment(order.admissionDateFront).format(
           'YYYY-MM-DD hh:mm:ss'
         ),
         clientname: order.clientname,
@@ -121,19 +121,17 @@ export default class OrderActions {
   }
 
   public async delete(pedido: IOrder) {
-    if (confirm('Seguro que desea eliminar la orden seleccionada?')) {
-      try {
-        const response: any = await this.backend.send(
-          DELETE_ENDPOIT,
-          undefined,
-          `${ORDER_ROUTE}/${pedido.id}`
-        );
-      } catch (error) {
-        console.error('Error borrando pedidio => ', error);
-      }
+    try {
+      const response: any = await this.backend.send(
+        DELETE_ENDPOIT,
+        undefined,
+        `${ORDER_ROUTE}/${pedido.id}`
+      );
       return true;
+    } catch (error) {
+      console.error('Error borrando pedidio => ', error);
+      return null;
     }
-    return false;
   }
 
   getMaxIdOfOrders(orders: IOrder[]) {

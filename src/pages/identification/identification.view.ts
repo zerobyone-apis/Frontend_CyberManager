@@ -15,8 +15,8 @@ import { IEnterprise } from '../../types/Enterprise.type';
 import { IRepair } from '../../types/Repair.type';
 import { IOrder } from '../../types/Order.type';
 import { USER_ADMIN } from '../../types/UsersSystem.type';
-
 import { Watch } from 'vue-property-decorator';
+import { IConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.view';
 
 import {
   ORDER_CONFIRM,
@@ -32,6 +32,23 @@ export default class IndentificationView extends vue {
   private userInfo: IUserStore = this.$store.getters.userInfo;
   private theme: string = this.$store.getters.theme;
 
+  private showDialogDelete: boolean = false;
+  private confirmDialogDelete: IConfirmDialog = {
+    title: 'Eliminar orden',
+    info: 'Desea borrar la orden seleccionada?',
+    buttonActivator: '',
+    agreeText: 'Eliminar',
+    disagreeText: 'Cancelar'
+  };
+  private showDialogCancelOrder: boolean = false;
+  private confirmDialogCancelOrder: IConfirmDialog = {
+    title: 'Cancelar cambios',
+    info: 'Desea cancelar los cambios de la orden seleccionada?',
+    buttonActivator: 'cancelar',
+    agreeText: 'Cancelar Cambios',
+    disagreeText: 'Volver'
+  };
+
   private enterpriseActions: EnterpriseAction = new EnterpriseAction();
   public orderActions: OrderAction = new OrderAction();
   public repairActions: RepairAction = new RepairAction();
@@ -40,7 +57,7 @@ export default class IndentificationView extends vue {
   public newOrder: IOrder = {
     id: 0,
     admissiondate: '',
-    admissiondateFront: moment().format('L h:mm:ss'),
+    admissionDateFront: moment().format('L h:mm:ss'),
     clientname: '',
     clientphone: '',
     article: '',
@@ -131,7 +148,7 @@ export default class IndentificationView extends vue {
   private headerOrder = [
     { text: 'Nro', value: 'id' },
     { text: 'Cliente', value: 'clientname' },
-    { text: 'Ingreso', value: 'admissiondateFront' },
+    { text: 'Ingreso', value: 'admissionDateFront' },
     { text: 'Articulo', value: 'article' },
     { text: 'Status', value: 'status' }
   ];
@@ -279,7 +296,7 @@ export default class IndentificationView extends vue {
         this.newOrder
       );
       if (responseAddOrder.statusCode === 200) {
-        responseAddOrder.value.admissionDateFront = this.newOrder.admissiondateFront;
+        responseAddOrder.value.admissionDateFront = this.newOrder.admissionDateFront;
         this.orders.unshift(responseAddOrder.value);
 
         Object.assign(this.newOrder, this.cleanFields);
@@ -372,16 +389,20 @@ export default class IndentificationView extends vue {
     }
   }
 
-  async deleteOrder(selectedOrder: IOrder) {
-    this.disabledButtons = true;
-    let responseDelete: boolean = await this.orderActions.delete(selectedOrder);
-    if (responseDelete) {
-      this.orders.splice(this.selectedOrder, 1);
-      Object.assign(this.newOrder, this.cleanFields);
-      this.newOrder.id = this.orderActions.getMaxIdOfOrders(this.orders);
-      this.interactionsMode.order = 0;
-      this.selectedOrder = -1;
-      this.showNotificationSuccess('Orden eliminada exitosamente!');
+  async deleteOrder(selectedOrder: IOrder, action: boolean) {
+    if (action) {
+      this.disabledButtons = true;
+      let responseDelete: boolean | null = await this.orderActions.delete(
+        selectedOrder
+      );
+      if (responseDelete) {
+        this.orders.splice(this.selectedOrder, 1);
+        Object.assign(this.newOrder, this.cleanFields);
+        this.newOrder.id = this.orderActions.getMaxIdOfOrders(this.orders);
+        this.interactionsMode.order = 0;
+        this.selectedOrder = -1;
+        this.showNotificationSuccess('Orden eliminada exitosamente!');
+      }
     }
     this.disabledButtons = false;
   }
@@ -391,8 +412,8 @@ export default class IndentificationView extends vue {
     Object.assign(this.newOrder, this.cleanFields);
     Object.assign(this.newOrder, {
       id: order.id,
-      admissiondate: order.admissiondate,
-      admissiondateFront: order.admissiondateFront,
+      admissionDate: order.admissiondate,
+      admissionDateFront: order.admissionDateFront,
       deliveryDate: order.deliverydate,
       clientname: order.clientname,
       clientphone: order.clientphone,
@@ -426,16 +447,14 @@ export default class IndentificationView extends vue {
   }
 
   private cancelSaveOrder() {
-    if (confirm('Seguro que desea descartar los cambios?')) {
-      let updatedOrder: IOrder = this.orders[this.selectedOrder];
-      updatedOrder.status = this.newOrder.status;
-      this.orders[this.selectedOrder] = updatedOrder;
-      Object.assign(this.newOrder, this.cleanFields);
-      this.newOrder.id = this.orderActions.getMaxIdOfOrders(this.orders);
-      this.selectedOrder = -1;
-      this.v.clearFails();
-      this.interactionsMode.order = 0; // mode new
-    }
+    let updatedOrder: IOrder = this.orders[this.selectedOrder];
+    updatedOrder.status = this.newOrder.status;
+    this.orders[this.selectedOrder] = updatedOrder;
+    Object.assign(this.newOrder, this.cleanFields);
+    this.newOrder.id = this.orderActions.getMaxIdOfOrders(this.orders);
+    this.selectedOrder = -1;
+    this.v.clearFails();
+    this.interactionsMode.order = 0; // mode new
   }
 
   private async beginAnalitycs() {
@@ -452,15 +471,21 @@ export default class IndentificationView extends vue {
         this.analitycs.result = `Articulos: ${
           result.cantarticles === null ? 0 : result.cantarticles
         }, 
+          }, 
+        }, 
                                  Precio Total: $${
                                    result.totalprice === null
                                      ? 0
                                      : result.totalprice
                                  }, 
+          }, 
+                                 }, 
                                  Precio total de reparacion: $${
                                    result.totalreplacementprice === null
                                      ? 0
                                      : result.totalreplacementprice
+                                 }, 
+          }, 
                                  }, 
                                  Precio Neto: $${
                                    result.netoprice === null
@@ -481,8 +506,8 @@ export default class IndentificationView extends vue {
   }
 
   private resetAnalitycs() {
-    this.analitycs.startDate = this.newOrder.admissiondate || '';
-    this.analitycs.endDate = this.newOrder.admissiondate || '';
+    this.analitycs.startDate = '';
+    this.analitycs.endDate = '';
     this.analitycs.result = '';
   }
 
@@ -515,7 +540,7 @@ export default class IndentificationView extends vue {
   private cleanFields: IOrder = {
     id: 0,
     admissiondate: moment().format('L h:mm:ss'),
-    admissiondateFront: moment().format('L h:mm:ss'),
+    admissionDateFront: moment().format('L h:mm:ss'),
     clientname: '',
     clientphone: '',
     article: '',
