@@ -86,21 +86,23 @@
                   class="cyber_manager-text_field"
                 ></v-text-field>
 
-                <v-text-field
+                <v-textarea
                   :dark="$store.getters.theme == 'dark'"
                   v-model="newOrder.reportedfailure"
                   dense
+                  class="cyber_manager-text_field text-area text-area_small"
+                  name="input-7-1"
                   label="Daño reportado"
-                  class="cyber_manager-text_field"
-                ></v-text-field>
+                ></v-textarea>
 
-                <v-text-field
+                <v-textarea
                   :dark="$store.getters.theme == 'dark'"
                   v-model="newOrder.observations"
                   dense
                   label="Notas"
-                  class="cyber_manager-text_field"
-                ></v-text-field>
+                  class="cyber_manager-text_field text-area text-area_small"
+                  name="input-7-1"
+                ></v-textarea>
               </div>
 
               <Footer
@@ -239,7 +241,7 @@
                           <v-chip
                             v-if="header.value == 'status'"
                             :color="getColorByStatus(item[header.value])"
-                            outlined
+                            :outlined="$store.getters.theme  === 'dark' ? true : false"
                           >{{ item[header.value] }}</v-chip>
                         </v-flex>
                       </v-layout>
@@ -479,7 +481,17 @@
               <div class="enterprise-box" :class="`cyber_manager-box_${$store.getters.theme}`">
                 <div class="content">
                   <div class="pdf-fields">
-                    <v-text-field
+                    
+                    <v-textarea
+                      :dark="$store.getters.theme == 'dark'"
+                      v-model="enterprise.enterpriserules"
+                      label="Pie de factura"
+                      class="cyber_manager-text_field text-area"
+                      name="input-7-1"
+                      dense
+                    ></v-textarea>
+
+                    <!-- <v-text-field
                       :dark="$store.getters.theme == 'dark'"
                       v-model="enterprise.enterpriserules"
                       label="Reglas de la empresa"
@@ -496,7 +508,7 @@
                       v-model="enterprise.secondmessage"
                       label="Anotacion en el pie del reporte de salida"
                       class="cyber_manager-text_field"
-                    ></v-text-field>
+                    ></v-text-field>-->
                   </div>
                 </div>
               </div>

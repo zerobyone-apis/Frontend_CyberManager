@@ -73,6 +73,19 @@ select:-webkit-autofill:focus {
     }
   }
 
+  .text-area {
+    textarea {
+      padding: 5px 20px 5px 20px;
+    }
+  }
+
+  .text-area_small {
+    textarea {
+      height: 75px;
+    }
+
+  }
+
 }
 
 // LIGHT MODE
