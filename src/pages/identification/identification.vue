@@ -7,7 +7,6 @@
       :disabled="disabledButtons"
       colorButtons="green"
     />
-
     <v-stepper v-model="wizard" class="stepper">
       <v-stepper-items>
         <!-- identification step -->
@@ -90,7 +89,7 @@
                   :dark="$store.getters.theme == 'dark'"
                   v-model="newOrder.reportedfailure"
                   dense
-                  class="cyber_manager-text_field text-area text-area_small"
+                  class="cyber_manager-text_field text-area-x text-area_small"
                   name="input-7-1"
                   label="Daño reportado"
                 ></v-textarea>
@@ -100,7 +99,7 @@
                   v-model="newOrder.observations"
                   dense
                   label="Notas"
-                  class="cyber_manager-text_field text-area text-area_small"
+                  class="cyber_manager-text_field text-area-x text-area_small"
                   name="input-7-1"
                 ></v-textarea>
               </div>
@@ -109,10 +108,11 @@
                 @save="saveOrder()"
                 @cancel="cancelSaveOrder()"
                 @add="addOrder()"
+                :hide-cancel="true"
                 :save-mode="interactionsMode.order == 1"
                 :disabled="disabledButtons"
               >
-                <template v-slot:cancelButton="{ saveMode, disabled }">
+                <!-- <template v-slot:cancelButton="{ saveMode, disabled }">
                   <confirm-dialog
                     dark
                     v-if="saveMode"
@@ -134,7 +134,7 @@
                       >Cancelar</v-btn>
                     </template>
                   </confirm-dialog>
-                </template>
+                </template>-->
               </Footer>
             </div>
 
@@ -217,7 +217,13 @@
                     <div class="left-box">
                       <v-btn
                         class="icon"
-                        @click="showSelectedOrder(item)"
+                        @click="
+                          () => {
+                            interactionsMode.order == 0
+                              ? showSelectedOrder(item)
+                              : cancelSaveOrder();
+                          }
+                        "
                         :color="changeColorToEdit(item)"
                         :disabled="
                           interactionsMode.order == 1 &&
@@ -227,7 +233,14 @@
                         fab
                         text
                       >
-                        <v-icon>edit</v-icon>
+                        <v-icon>
+                          {{
+                          interactionsMode.order == 1 &&
+                          selectedOrder == orders.indexOf(item)
+                          ? 'close'
+                          : 'edit'
+                          }}
+                        </v-icon>
                       </v-btn>
                     </div>
 
@@ -238,10 +251,10 @@
                             v-if="header.value != 'status'"
                             class="item_table-text"
                           >{{ item[header.value] }}</p>
+                          <!-- :outlined="$store.getters.theme  === 'dark' ? true : false" -->
                           <v-chip
                             v-if="header.value == 'status'"
                             :color="getColorByStatus(item[header.value])"
-                            :outlined="$store.getters.theme  === 'dark' ? true : false"
                           >{{ item[header.value] }}</v-chip>
                         </v-flex>
                       </v-layout>
@@ -390,7 +403,7 @@
                     <v-textarea
                       :dark="$store.getters.theme == 'dark'"
                       v-model="repair.reparation"
-                      class="cyber_manager-text_field text-area"
+                      class="cyber_manager-text_field text-area-x"
                       dense
                       name="input-7-1"
                       label="Reparacion"
@@ -481,12 +494,11 @@
               <div class="enterprise-box" :class="`cyber_manager-box_${$store.getters.theme}`">
                 <div class="content">
                   <div class="pdf-fields">
-                    
                     <v-textarea
                       :dark="$store.getters.theme == 'dark'"
                       v-model="enterprise.enterpriserules"
                       label="Pie de factura"
-                      class="cyber_manager-text_field text-area"
+                      class="cyber_manager-text_field text-area-x"
                       name="input-7-1"
                       dense
                     ></v-textarea>
@@ -583,10 +595,11 @@
       ></v-progress-linear>
     </v-stepper>
 
-    <v-snackbar
-      v-model="notification.visible"
-      :color="notification.color"
-    >{{ notification.message }}</v-snackbar>
+    <v-snackbar v-model="notification.visible" :color="notification.color">
+      {{
+      notification.message
+      }}
+    </v-snackbar>
   </div>
 </template>
 

@@ -57,7 +57,7 @@ export default class IndentificationView extends vue {
   public newOrder: IOrder = {
     id: 0,
     admissiondate: '',
-    admissionDateFront: moment().format('L h:mm:ss'),
+    admissionDateFront: moment().format('DD/MM/YYYY hh:mm:ss'),
     clientname: '',
     clientphone: '',
     article: '',
@@ -324,7 +324,7 @@ export default class IndentificationView extends vue {
         this.newOrder
       );
       if (responseAddOrder.statusCode === 200) {
-        responseAddOrder.value.admissionDateFront = this.newOrder.admissionDateFront;
+        responseAddOrder.value.admissionDateFront = moment().format('DD/MM/YYYY hh:mm:ss');
 
         if (this.modeSortId) {
           this.orders.unshift(responseAddOrder.value);
@@ -485,6 +485,7 @@ export default class IndentificationView extends vue {
     this.orders[this.selectedOrder] = updatedOrder;
     Object.assign(this.newOrder, this.cleanFields);
     this.newOrder.id = this.orderActions.getMaxIdOfOrders(this.orders);
+    this.newOrder.admissionDateFront = moment().format('DD/MM/YYYY hh:mm:ss')
     this.selectedOrder = -1;
     this.v.clearFails();
     this.interactionsMode.order = 0; // mode new
@@ -503,22 +504,22 @@ export default class IndentificationView extends vue {
         let result: any = responseArqueo;
         this.analitycs.result = `Articulos: ${
           result.cantarticles === null ? 0 : result.cantarticles
-        }, 
+          }, 
                                  Total: $${
-                                   result.totalprice === null
-                                     ? 0
-                                     : result.totalprice
-                                 }, 
+          result.totalprice === null
+            ? 0
+            : result.totalprice
+          }, 
                                  Costo de reparacion: $${
-                                   result.totalreplacementprice === null
-                                     ? 0
-                                     : result.totalreplacementprice
-                                 }, 
+          result.totalreplacementprice === null
+            ? 0
+            : result.totalreplacementprice
+          }, 
                                  Ganancia: $${
-                                   result.netoprice === null
-                                     ? 0
-                                     : result.netoprice
-                                 }`;
+          result.netoprice === null
+            ? 0
+            : result.netoprice
+          }`;
         this.disabledButtons = false;
       } else {
         this.showNotificationFail(
@@ -566,8 +567,8 @@ export default class IndentificationView extends vue {
   //Clear fields object UI-CLEAN-order
   private cleanFields: IOrder = {
     id: 0,
-    admissiondate: moment().format('L h:mm:ss'),
-    admissionDateFront: moment().format('L h:mm:ss'),
+    admissiondate: '',
+    admissionDateFront: moment().format('DD/MM/YYYY hh:mm:ss'),
     clientname: '',
     clientphone: '',
     article: '',
