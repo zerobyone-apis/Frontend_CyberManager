@@ -10,7 +10,6 @@ import 'vue-croppa/dist/vue-croppa.css';
 // vue-print-nb is manual declared in shims-vue.d.ts
 
 Vue.config.productionTip = false;
-Vue.use(vuetify);
 Vue.use(Vuetify);
 // Vue.use(vueprint)
 

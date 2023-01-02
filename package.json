@@ -3,16 +3,19 @@
   "version": "2.0.0",
   "private": true,
   "engines": {
+    "node": "18.0.0",
     "yarn": "^1.21.1"
   },
   "scripts": {
+    "create-npmrc": "bash create-npmrc.sh --local",
     "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "vercel": "vercel"
   },
   "dependencies": {
-    "@types/jspdf": "^1.3.2",
+    "coa": "2.0.2",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-typescript": "^3.11.0",
     "@vue/cli-plugin-unit-jest": "^3.11.0",
@@ -21,7 +24,7 @@
     "concurrently": "^5.0.0",
     "fibers": "^4.0.1",
     "html-to-image": "^0.1.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.2.15",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
@@ -33,6 +36,7 @@
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "typescript": "^3.6.3",
+    "vercel": "^28.7.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
     "vue-cli-plugin-vuetify": "^0.6.3",
